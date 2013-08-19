@@ -526,6 +526,8 @@ void CL_ParseDownload ( msg_t *msg ) {
 
 	CL_AddReliableCommand( va("nextdl %d", clc.downloadBlock) );
 	clc.downloadBlock++;
+		CL_WritePacket();
+		CL_WritePacket();
 
 	clc.downloadCount += size;
 

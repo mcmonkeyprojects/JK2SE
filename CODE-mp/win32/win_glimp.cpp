@@ -36,7 +36,7 @@ typedef enum {
 #define TRY_PFD_FAIL_SOFT	1
 #define TRY_PFD_FAIL_HARD	2
 
-#define	WINDOW_CLASS_NAME	"Jedi Knight 2: Jedi Outcast MP"
+#define	WINDOW_CLASS_NAME	"Jedi Knight 2: Jedi Outcast SE"
 
 static void		GLW_InitExtensions( void );
 static rserr_t	GLW_SetMode( int mode, 
@@ -683,6 +683,15 @@ static void PrintCDSError( int value )
 		ri.Printf( PRINT_ALL, "unknown error %d\n", value );
 		break;
 	}
+}
+
+int gl_getwidth( void )
+{
+	return glConfig.vidWidth;
+}
+int gl_getheight( void )
+{
+	return glConfig.vidHeight;
 }
 
 /*

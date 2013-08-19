@@ -6,89 +6,92 @@
 --------------------Configuration: WinDed - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\DOCUME~1\jmonroe\LOCALS~1\Temp\RSP12B4.tmp" with contents
+Creating temporary file "C:\DOCUME~1\mick\LOCALS~1\Temp\RSP1236.tmp" with contents
 [
-/nologo /MLd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /D "DEDICATED" /D "_JK2" /D "BOTLIB" /FR"Debug/dedicated/" /Fo"Debug/dedicated/" /Fd"Debug/dedicated/" /FD /GZ /c 
-"C:\projects\jk2\CODE-mp\qcommon\cm_load.cpp"
-"C:\projects\jk2\CODE-mp\qcommon\cm_patch.cpp"
-"C:\projects\jk2\CODE-mp\qcommon\cm_polylib.cpp"
-"C:\projects\jk2\CODE-mp\qcommon\cm_test.cpp"
-"C:\projects\jk2\CODE-mp\qcommon\cm_trace.cpp"
-"C:\projects\jk2\CODE-mp\qcommon\cmd.cpp"
-"C:\projects\jk2\CODE-mp\qcommon\common.cpp"
-"C:\projects\jk2\CODE-mp\qcommon\cvar.cpp"
-"C:\projects\jk2\CODE-mp\qcommon\files.cpp"
-"C:\projects\jk2\CODE-mp\qcommon\huffman.cpp"
-"C:\projects\jk2\CODE-mp\qcommon\msg.cpp"
-"C:\projects\jk2\CODE-mp\qcommon\net_chan.cpp"
-"C:\projects\jk2\CODE-mp\qcommon\q_math.cpp"
-"C:\projects\jk2\CODE-mp\qcommon\q_shared.cpp"
-"C:\projects\jk2\CODE-mp\qcommon\RoffSystem.cpp"
-"C:\projects\jk2\CODE-mp\qcommon\strip.cpp"
-"C:\projects\jk2\CODE-mp\qcommon\unzip.cpp"
-"C:\projects\jk2\CODE-mp\qcommon\vm.cpp"
-"C:\projects\jk2\CODE-mp\qcommon\vm_interpreted.cpp"
-"C:\projects\jk2\CODE-mp\qcommon\vm_x86.cpp"
-"C:\projects\jk2\CODE-mp\ghoul2\G2_API.cpp"
-"C:\projects\jk2\CODE-mp\ghoul2\G2_bolts.cpp"
-"C:\projects\jk2\CODE-mp\ghoul2\G2_bones.cpp"
-"C:\projects\jk2\CODE-mp\ghoul2\G2_misc.cpp"
-"C:\projects\jk2\CODE-mp\ghoul2\G2_surfaces.cpp"
-"C:\projects\jk2\CODE-mp\server\sv_bot.cpp"
-"C:\projects\jk2\CODE-mp\server\sv_ccmds.cpp"
-"C:\projects\jk2\CODE-mp\server\sv_client.cpp"
-"C:\projects\jk2\CODE-mp\server\sv_game.cpp"
-"C:\projects\jk2\CODE-mp\server\sv_init.cpp"
-"C:\projects\jk2\CODE-mp\server\sv_main.cpp"
-"C:\projects\jk2\CODE-mp\server\sv_net_chan.cpp"
-"C:\projects\jk2\CODE-mp\server\sv_snapshot.cpp"
-"C:\projects\jk2\CODE-mp\server\sv_world.cpp"
-"C:\projects\jk2\CODE-mp\null\null_client.cpp"
-"C:\projects\jk2\CODE-mp\null\null_glimp.cpp"
-"C:\projects\jk2\CODE-mp\null\null_input.cpp"
-"C:\projects\jk2\CODE-mp\null\null_snddma.cpp"
-"C:\projects\jk2\CODE-mp\null\win_main.cpp"
-"C:\projects\jk2\CODE-mp\renderer\tr_backend.cpp"
-"C:\projects\jk2\CODE-mp\renderer\tr_ghoul2.cpp"
-"C:\projects\jk2\CODE-mp\renderer\tr_image.cpp"
-"C:\projects\jk2\CODE-mp\renderer\tr_init.cpp"
-"C:\projects\jk2\CODE-mp\renderer\tr_main.cpp"
-"C:\projects\jk2\CODE-mp\renderer\tr_mesh.cpp"
-"C:\projects\jk2\CODE-mp\renderer\tr_model.cpp"
-"C:\projects\jk2\CODE-mp\renderer\tr_shader.cpp"
-"C:\projects\jk2\CODE-mp\win32\win_net.cpp"
-"C:\projects\jk2\CODE-mp\win32\win_shared.cpp"
-"C:\projects\jk2\CODE-mp\botlib\be_aas_bspq3.cpp"
-"C:\projects\jk2\CODE-mp\botlib\be_aas_cluster.cpp"
-"C:\projects\jk2\CODE-mp\botlib\be_aas_debug.cpp"
-"C:\projects\jk2\CODE-mp\botlib\be_aas_entity.cpp"
-"C:\projects\jk2\CODE-mp\botlib\be_aas_file.cpp"
-"C:\projects\jk2\CODE-mp\botlib\be_aas_main.cpp"
-"C:\projects\jk2\CODE-mp\botlib\be_aas_move.cpp"
-"C:\projects\jk2\CODE-mp\botlib\be_aas_optimize.cpp"
-"C:\projects\jk2\CODE-mp\botlib\be_aas_reach.cpp"
-"C:\projects\jk2\CODE-mp\botlib\be_aas_route.cpp"
-"C:\projects\jk2\CODE-mp\botlib\be_aas_routealt.cpp"
-"C:\projects\jk2\CODE-mp\botlib\be_aas_sample.cpp"
-"C:\projects\jk2\CODE-mp\botlib\be_ai_char.cpp"
-"C:\projects\jk2\CODE-mp\botlib\be_ai_chat.cpp"
-"C:\projects\jk2\CODE-mp\botlib\be_ai_gen.cpp"
-"C:\projects\jk2\CODE-mp\botlib\be_ai_goal.cpp"
-"C:\projects\jk2\CODE-mp\botlib\be_ai_move.cpp"
-"C:\projects\jk2\CODE-mp\botlib\be_ai_weap.cpp"
-"C:\projects\jk2\CODE-mp\botlib\be_ai_weight.cpp"
-"C:\projects\jk2\CODE-mp\botlib\be_ea.cpp"
-"C:\projects\jk2\CODE-mp\botlib\be_interface.cpp"
-"C:\projects\jk2\CODE-mp\botlib\l_crc.cpp"
-"C:\projects\jk2\CODE-mp\botlib\l_libvar.cpp"
-"C:\projects\jk2\CODE-mp\botlib\l_log.cpp"
-"C:\projects\jk2\CODE-mp\botlib\l_memory.cpp"
-"C:\projects\jk2\CODE-mp\botlib\l_precomp.cpp"
-"C:\projects\jk2\CODE-mp\botlib\l_script.cpp"
-"C:\projects\jk2\CODE-mp\botlib\l_struct.cpp"
+/nologo /MLd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_CONSOLE" /D "_MBCS" /D "DEDICATED" /D "_JK2" /D "BOTLIB" /FR"Debug/dedicated/" /Fo"Debug/dedicated/" /Fd"Debug/dedicated/" /FD /GZ /c 
+"C:\JK2\CODE-mp\qcommon\cm_load.cpp"
+"C:\JK2\CODE-mp\qcommon\cm_patch.cpp"
+"C:\JK2\CODE-mp\qcommon\cm_polylib.cpp"
+"C:\JK2\CODE-mp\qcommon\cm_test.cpp"
+"C:\JK2\CODE-mp\qcommon\cm_trace.cpp"
+"C:\JK2\CODE-mp\qcommon\cmd.cpp"
+"C:\JK2\CODE-mp\qcommon\common.cpp"
+"C:\JK2\CODE-mp\qcommon\cvar.cpp"
+"C:\JK2\CODE-mp\qcommon\files.cpp"
+"C:\JK2\CODE-mp\qcommon\huffman.cpp"
+"C:\JK2\CODE-mp\qcommon\md4.cpp"
+"C:\JK2\CODE-mp\qcommon\msg.cpp"
+"C:\JK2\CODE-mp\qcommon\net_chan.cpp"
+"C:\JK2\CODE-mp\qcommon\q_math.cpp"
+"C:\JK2\CODE-mp\qcommon\q_shared.cpp"
+"C:\JK2\CODE-mp\qcommon\RoffSystem.cpp"
+"C:\JK2\CODE-mp\qcommon\strip.cpp"
+"C:\JK2\CODE-mp\qcommon\unzip.cpp"
+"C:\JK2\CODE-mp\qcommon\vm.cpp"
+"C:\JK2\CODE-mp\qcommon\vm_interpreted.cpp"
+"C:\JK2\CODE-mp\qcommon\vm_x86.cpp"
+"C:\JK2\CODE-mp\ghoul2\G2_API.cpp"
+"C:\JK2\CODE-mp\ghoul2\G2_bolts.cpp"
+"C:\JK2\CODE-mp\ghoul2\G2_bones.cpp"
+"C:\JK2\CODE-mp\ghoul2\G2_misc.cpp"
+"C:\JK2\CODE-mp\ghoul2\G2_surfaces.cpp"
+"C:\JK2\CODE-mp\server\sv_bot.cpp"
+"C:\JK2\CODE-mp\server\sv_ccmds.cpp"
+"C:\JK2\CODE-mp\server\sv_client.cpp"
+"C:\JK2\CODE-mp\server\sv_game.cpp"
+"C:\JK2\CODE-mp\server\sv_init.cpp"
+"C:\JK2\CODE-mp\server\sv_main.cpp"
+"C:\JK2\CODE-mp\server\sv_net_chan.cpp"
+"C:\JK2\CODE-mp\server\sv_snapshot.cpp"
+"C:\JK2\CODE-mp\server\sv_world.cpp"
+"C:\JK2\CODE-mp\null\null_client.cpp"
+"C:\JK2\CODE-mp\null\null_glimp.cpp"
+"C:\JK2\CODE-mp\null\null_input.cpp"
+"C:\JK2\CODE-mp\null\null_renderer.cpp"
+"C:\JK2\CODE-mp\null\null_snddma.cpp"
+"C:\JK2\CODE-mp\null\win_main.cpp"
+"C:\JK2\CODE-mp\renderer\matcomp.c"
+"C:\JK2\CODE-mp\renderer\tr_backend.cpp"
+"C:\JK2\CODE-mp\renderer\tr_ghoul2.cpp"
+"C:\JK2\CODE-mp\renderer\tr_image.cpp"
+"C:\JK2\CODE-mp\renderer\tr_init.cpp"
+"C:\JK2\CODE-mp\renderer\tr_main.cpp"
+"C:\JK2\CODE-mp\renderer\tr_mesh.cpp"
+"C:\JK2\CODE-mp\renderer\tr_model.cpp"
+"C:\JK2\CODE-mp\renderer\tr_shader.cpp"
+"C:\JK2\CODE-mp\win32\win_net.cpp"
+"C:\JK2\CODE-mp\win32\win_shared.cpp"
+"C:\JK2\CODE-mp\botlib\be_aas_bspq3.cpp"
+"C:\JK2\CODE-mp\botlib\be_aas_cluster.cpp"
+"C:\JK2\CODE-mp\botlib\be_aas_debug.cpp"
+"C:\JK2\CODE-mp\botlib\be_aas_entity.cpp"
+"C:\JK2\CODE-mp\botlib\be_aas_file.cpp"
+"C:\JK2\CODE-mp\botlib\be_aas_main.cpp"
+"C:\JK2\CODE-mp\botlib\be_aas_move.cpp"
+"C:\JK2\CODE-mp\botlib\be_aas_optimize.cpp"
+"C:\JK2\CODE-mp\botlib\be_aas_reach.cpp"
+"C:\JK2\CODE-mp\botlib\be_aas_route.cpp"
+"C:\JK2\CODE-mp\botlib\be_aas_routealt.cpp"
+"C:\JK2\CODE-mp\botlib\be_aas_sample.cpp"
+"C:\JK2\CODE-mp\botlib\be_ai_char.cpp"
+"C:\JK2\CODE-mp\botlib\be_ai_chat.cpp"
+"C:\JK2\CODE-mp\botlib\be_ai_gen.cpp"
+"C:\JK2\CODE-mp\botlib\be_ai_goal.cpp"
+"C:\JK2\CODE-mp\botlib\be_ai_move.cpp"
+"C:\JK2\CODE-mp\botlib\be_ai_weap.cpp"
+"C:\JK2\CODE-mp\botlib\be_ai_weight.cpp"
+"C:\JK2\CODE-mp\botlib\be_ea.cpp"
+"C:\JK2\CODE-mp\botlib\be_interface.cpp"
+"C:\JK2\CODE-mp\botlib\l_crc.cpp"
+"C:\JK2\CODE-mp\botlib\l_libvar.cpp"
+"C:\JK2\CODE-mp\botlib\l_log.cpp"
+"C:\JK2\CODE-mp\botlib\l_memory.cpp"
+"C:\JK2\CODE-mp\botlib\l_precomp.cpp"
+"C:\JK2\CODE-mp\botlib\l_script.cpp"
+"C:\JK2\CODE-mp\botlib\l_struct.cpp"
 ]
-Creating command line "cl.exe @C:\DOCUME~1\jmonroe\LOCALS~1\Temp\RSP12B4.tmp" 
-Creating temporary file "C:\DOCUME~1\jmonroe\LOCALS~1\Temp\RSP12B5.tmp" with contents
+Creating command line "cl.exe @C:\DOCUME~1\mick\LOCALS~1\Temp\RSP1236.tmp" 
+Creating temporary file "C:\DOCUME~1\mick\LOCALS~1\Temp\RSP1237.tmp" with contents
 [
 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wsock32.lib Winmm.lib /nologo /subsystem:console /incremental:yes /pdb:"Debug/jk2Ded.pdb" /debug /machine:I386 /out:"Debug/jk2Ded.exe" /pdbtype:sept 
 ".\Debug\dedicated\cm_load.obj"
@@ -172,11 +175,8 @@ kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32
 ".\Debug\dedicated\l_script.obj"
 ".\Debug\dedicated\l_struct.obj"
 ]
-Creating command line "link.exe @C:\DOCUME~1\jmonroe\LOCALS~1\Temp\RSP12B5.tmp"
+Creating command line "link.exe @C:\DOCUME~1\mick\LOCALS~1\Temp\RSP1237.tmp"
 <h3>Output Window</h3>
-Compiling...
-G2_API.cpp
-Generating Code...
 Compiling...
 cm_load.cpp
 cm_patch.cpp
@@ -188,6 +188,7 @@ common.cpp
 cvar.cpp
 files.cpp
 huffman.cpp
+md4.cpp
 msg.cpp
 net_chan.cpp
 q_math.cpp
@@ -197,9 +198,10 @@ strip.cpp
 unzip.cpp
 vm.cpp
 vm_interpreted.cpp
-vm_x86.cpp
 Generating Code...
 Compiling...
+vm_x86.cpp
+G2_API.cpp
 G2_bolts.cpp
 G2_bones.cpp
 G2_misc.cpp
@@ -216,12 +218,18 @@ sv_world.cpp
 null_client.cpp
 null_glimp.cpp
 null_input.cpp
+null_renderer.cpp
 null_snddma.cpp
-win_main.cpp
-tr_backend.cpp
-tr_ghoul2.cpp
 Generating Code...
 Compiling...
+win_main.cpp
+Generating Code...
+Compiling...
+matcomp.c
+Generating Code...
+Compiling...
+tr_backend.cpp
+tr_ghoul2.cpp
 tr_image.cpp
 tr_init.cpp
 tr_main.cpp
@@ -240,10 +248,10 @@ be_aas_move.cpp
 be_aas_optimize.cpp
 be_aas_reach.cpp
 be_aas_route.cpp
-be_aas_routealt.cpp
-be_aas_sample.cpp
 Generating Code...
 Compiling...
+be_aas_routealt.cpp
+be_aas_sample.cpp
 be_ai_char.cpp
 be_ai_chat.cpp
 be_ai_gen.cpp
@@ -262,7 +270,7 @@ l_script.cpp
 l_struct.cpp
 Generating Code...
 Linking...
-Creating temporary file "C:\DOCUME~1\jmonroe\LOCALS~1\Temp\RSP12B8.tmp" with contents
+Creating temporary file "C:\DOCUME~1\mick\LOCALS~1\Temp\RSP1239.tmp" with contents
 [
 /nologo /o"Debug/WinDed.bsc" 
 ".\Debug\dedicated\cm_load.sbr"
@@ -345,7 +353,7 @@ Creating temporary file "C:\DOCUME~1\jmonroe\LOCALS~1\Temp\RSP12B8.tmp" with con
 ".\Debug\dedicated\l_precomp.sbr"
 ".\Debug\dedicated\l_script.sbr"
 ".\Debug\dedicated\l_struct.sbr"]
-Creating command line "bscmake.exe @C:\DOCUME~1\jmonroe\LOCALS~1\Temp\RSP12B8.tmp"
+Creating command line "bscmake.exe @C:\DOCUME~1\mick\LOCALS~1\Temp\RSP1239.tmp"
 Creating browse info file...
 <h3>Output Window</h3>
 

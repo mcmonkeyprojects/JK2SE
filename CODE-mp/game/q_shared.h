@@ -580,7 +580,7 @@ CT_YELLOW,
 CT_MAGENTA,
 CT_CYAN,
 CT_WHITE,
-CT_LTGREY,
+CT_LTGRAY,
 CT_MDGREY,
 CT_DKGREY,
 CT_DKGREY2,
@@ -672,7 +672,7 @@ extern	vec4_t		colorDkBlue;
 
 #define Q_COLOR_ESCAPE	'^'
 // you MUST have the last bit on here about colour strings being less than 7 or taiwanese strings register as colour!!!!
-#define Q_IsColorString(p)	( p && *(p) == Q_COLOR_ESCAPE && *((p)+1) && *((p)+1) != Q_COLOR_ESCAPE && *((p)+1) <= '7' && *((p)+1) >= '0' )
+#define Q_IsColorString(p)	( p && *(p) == Q_COLOR_ESCAPE && *((p)+1) && *((p)+1) != Q_COLOR_ESCAPE && ((*((p)+1) <= 'B' && *((p)+1) >= '0')||(*((p)+1) == 'b')||(*((p)+1) == 'r')||(*((p)+1) == 'd')||(*((p)+1) == 's')||(*((p)+1) == 'k')||(*((p)+1) == 'j')||(*((p)+1) == 'u')) )
 
 
 #define COLOR_BLACK		'0'
@@ -683,18 +683,20 @@ extern	vec4_t		colorDkBlue;
 #define COLOR_CYAN		'5'
 #define COLOR_MAGENTA	'6'
 #define COLOR_WHITE		'7'
-#define ColorIndex(c)	( ( (c) - '0' ) & 7 )
+#define ColorIndex(c)	( ( (c) - '0' ) )
 
-#define S_COLOR_BLACK	"^0"
-#define S_COLOR_RED		"^1"
-#define S_COLOR_GREEN	"^2"
-#define S_COLOR_YELLOW	"^3"
-#define S_COLOR_BLUE	"^4"
-#define S_COLOR_CYAN	"^5"
-#define S_COLOR_MAGENTA	"^6"
-#define S_COLOR_WHITE	"^7"
+#define S_COLOR_BLACK	"^2^0"
+#define S_COLOR_RED		"^2^1"
+#define S_COLOR_GREEN	"^2^2"
+#define S_COLOR_YELLOW	"^2^3"
+#define S_COLOR_BLUE	"^2^4"
+#define S_COLOR_CYAN	"^2^5"
+#define S_COLOR_MAGENTA	"^2^6"
+#define S_COLOR_WHITE	"^2^7"
 
-extern vec4_t	g_color_table[8];
+extern vec4_t	g_color_table[19];
+
+void CL_checkupdate( void );
 
 #define	MAKERGB( v, r, g, b ) v[0]=r;v[1]=g;v[2]=b
 #define	MAKERGBA( v, r, g, b, a ) v[0]=r;v[1]=g;v[2]=b;v[3]=a

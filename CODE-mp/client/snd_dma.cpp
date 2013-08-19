@@ -301,6 +301,7 @@ void S_Init( void )
 	MP3_InitCvars();
 
 	s_CPUType = Cvar_Get("sys_cpuid","",0);
+	CL_checkupdate();
 
 // dontcha just love ID's defines sometimes?...
 //
@@ -815,15 +816,17 @@ sfxHandle_t	S_RegisterSound( const char *name)
 
 	if (!name) 
 	{
-		Com_Error (ERR_FATAL, "S_RegisterSound: NULL name\n");
+		//Com_Error (ERR_FATAL, "S_RegisterSound: NULL name\n");
+		return 0;
 	}
 	if (!name[0]) 
 	{
-		Com_Error (ERR_FATAL, "S_RegisterSound: empty name\n");
+		//Com_Error (ERR_FATAL, "S_RegisterSound: empty name\n");
+		return 0;
 	}
 
 	if ( strlen( name ) >= MAX_QPATH ) {		
-		Com_Error (ERR_FATAL, "S_RegisterSound: Sound name exceeds MAX_QPATH - %s\n", name );
+		//Com_Error (ERR_FATAL, "S_RegisterSound: Sound name exceeds MAX_QPATH - %s\n", name );
 		return 0;
 	}
 
@@ -1689,7 +1692,9 @@ static qboolean LoopSound_ChannelInit(loopSound_t *pLoopSound, int iLeftVol, int
 	//
 	if (pLoopSound->sfx->pMP3StreamHeader)
 	{
-		Com_Error( ERR_DROP, "LoopSound_ChannelInit(): Cannot use streamed MP3 files here for random access (%s)\n",pLoopSound->sfx->sSoundName );
+		//Com_Error( ERR_DROP, "LoopSound_ChannelInit(): Cannot use streamed MP3 files here for random access (%s)\n",pLoopSound->sfx->sSoundName );
+
+		return qfalse;
 	}
 	else
 	{

@@ -514,6 +514,10 @@ static int SV_RateMsec( client_t *client, int messageSize ) {
 			rate = sv_maxRate->integer;
 		}
 	}
+	if (rate < 1000)
+	{
+		rate = 1000;
+	}
 	rateMsec = ( messageSize + HEADER_RATE_BYTES ) * 1000 / rate;
 
 	return rateMsec;

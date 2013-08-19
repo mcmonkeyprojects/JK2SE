@@ -700,8 +700,10 @@ int RE_Font_StrLenPixels(const char *psText, const int iFontHandle, const float 
 		unsigned int uiLetter = AnyLanguage_ReadCharFromString( psText, &iAdvanceCount, NULL );
 		psText += iAdvanceCount;
 
-		if (uiLetter == '^' && *psText >= '0' && *psText <= '7')
+		if (/*uiLetter == '^' && *psText >= '0' && *psText <= '7'*/
+			Q_IsColorString(psText))
 		{
+			psText += 1;
 			// then this is colour, so skip it from width considerations
 		}
 		else
@@ -762,9 +764,20 @@ void RE_Font_DrawString(int ox, int oy, const char *psText, const float *rgba, c
 {		
 	int					x, y, colour, offset;
 	const glyphInfo_t	*pLetter;
+	bool				bold;
+	bool				shadow;
+	int					mmcolor;
+	bool				blockcol;
+	bool				strike;
+	bool				underline;
+	bool				obfu;
+	bool				jello;
 	qhandle_t			hShader;
+	qhandle_t			whiteshad;
 	qboolean			qbThisCharCountsAsLetter;	// logic for this bool must be kept same in this function and RE_Font_StrLenChars()
 
+	whiteshad = RE_RegisterShader( "white" );
+	blockcol = Cvar_VariableIntegerValue( "mc_blockrandom" ) == 1;
 	if(iFontHandle & STYLE_BLINK)
 	{
 		if((ri.Milliseconds() >> 7) & 1)
@@ -796,12 +809,11 @@ void RE_Font_DrawString(int ox, int oy, const char *psText, const float *rgba, c
 		fScaleA = fScale * 0.75f;
 		iAsianYAdjust = /*Round*/((((float)curfont->GetPointSize() * fScale) - ((float)curfont->GetPointSize() * fScaleA))/2);
 	}
-
 	
 	// Draw a dropshadow if required
 	if(iFontHandle & STYLE_DROPSHADOW)
 	{
-		static const vec4_t v4DKGREY2 = {0.15f, 0.15f, 0.15f, 1};
+		static const vec4_t v4DKGREY2 = {0.10f, 0.10f, 0.10f, 1};
 
 		offset = Round(curfont->GetPointSize() * fScale * 0.075f);
 		
@@ -815,6 +827,14 @@ void RE_Font_DrawString(int ox, int oy, const char *psText, const float *rgba, c
 	x = ox;
 	oy += Round((curfont->GetHeight() - (curfont->GetDescender() >> 1)) * fScale);
 	
+	bold = false;
+	shadow = false;
+	strike = false;
+	underline = false;
+	obfu = false;
+	jello = false;
+	mmcolor = 7;
+	colour = 7;
 	while(*psText)
 	{
 		int iAdvanceCount;
@@ -827,9 +847,86 @@ void RE_Font_DrawString(int ox, int oy, const char *psText, const float *rgba, c
 		{
 		case '^':
 		{
+			mmcolor = colour;
 			colour = ColorIndex(*psText++);
 			if (!gbInShadow)
 			{
+				if (blockcol && colour == 10)
+				{
+					colour = 9;
+				}
+				if (colour == 'b' - '0')
+				{
+					colour = mmcolor;
+					bold = true;
+				}
+				else
+				{
+					bold = false;
+				}
+				if (colour == 'd' - '0')
+				{
+					colour = mmcolor;
+					shadow = true;
+				}
+				else
+				{
+					shadow = false;
+				}
+				if (colour == 's' - '0')
+				{
+					colour = mmcolor;
+					strike = true;
+				}
+				else
+				{
+					strike = false;
+				}
+				if (colour == 'k' - '0')
+				{
+					if (!blockcol)
+					{
+					obfu = true;
+					colour = mmcolor;
+					}
+					else
+					{
+						colour = mmcolor;
+					}
+				}
+				else
+				{
+					obfu = false;
+				}
+				if (colour == 'j' - '0')
+				{
+					if (!blockcol)
+					{
+					jello = true;
+					colour = mmcolor;
+					}
+					else
+					{
+						colour = mmcolor;
+					}
+				}
+				else
+				{
+					jello = false;
+				}
+				if (colour == 'u' - '0')
+				{
+					underline = true;
+					colour = mmcolor;
+				}
+				else
+				{
+					underline = false;
+				}
+				if (colour == 'r' - '0')
+				{
+					colour = 11;
+				}
 				RE_SetColor( g_color_table[colour] );
 			}
 		}
@@ -852,6 +949,10 @@ void RE_Font_DrawString(int ox, int oy, const char *psText, const float *rgba, c
 
 		default:
 			qbThisCharCountsAsLetter = qtrue;
+			if (obfu)
+			{
+				uiLetter = irand(33, 126);
+			}
 			pLetter = curfont->GetLetter( uiLetter, &hShader );			// Description of pLetter
 			if(!pLetter->width)
 			{
@@ -865,7 +966,35 @@ void RE_Font_DrawString(int ox, int oy, const char *psText, const float *rgba, c
 			float fThisScale = uiLetter > 255 ? fScaleA : fScale;
 			y = oy - (curfont->mbRoundCalcs ? Round(pLetter->baseline * fThisScale) : pLetter->baseline * fThisScale);
 
-			RE_StretchPic ( x + Round(pLetter->horizOffset * fThisScale), // float x
+			if (shadow)
+			{
+				RE_SetColor(g_color_table[0]);
+			RE_StretchPic ( x + Round(pLetter->horizOffset * fThisScale) + 2, // float x
+							(uiLetter > 255) ? y - iAsianYAdjust : y + 2,	// float y
+							curfont->mbRoundCalcs ? Round(pLetter->width * fThisScale) : pLetter->width * fThisScale,	// float w
+							curfont->mbRoundCalcs ? Round(pLetter->height * fThisScale) : pLetter->height * fThisScale, // float h
+							pLetter->s,						// float s1
+							pLetter->t,						// float t1
+							pLetter->s2,					// float s2
+							pLetter->t2,					// float t2
+							//lastcolour.c, 
+							hShader							// qhandle_t hShader
+							);
+				RE_SetColor(g_color_table[colour]);
+			}
+			if (!gbInShadow)
+			{
+			if (colour == 10)
+			{
+					RE_SetColor(g_color_table[irand(0, 9)]);
+			}
+			if (colour == 11)
+			{
+				RE_SetColor(g_color_table[uiLetter % 10]);
+			}
+			if (bold)
+			{
+			RE_StretchPic ( x + Round(pLetter->horizOffset * fThisScale) + 1, // float x
 							(uiLetter > 255) ? y - iAsianYAdjust : y,	// float y
 							curfont->mbRoundCalcs ? Round(pLetter->width * fThisScale) : pLetter->width * fThisScale,	// float w
 							curfont->mbRoundCalcs ? Round(pLetter->height * fThisScale) : pLetter->height * fThisScale, // float h
@@ -876,16 +1005,41 @@ void RE_Font_DrawString(int ox, int oy, const char *psText, const float *rgba, c
 							//lastcolour.c, 
 							hShader							// qhandle_t hShader
 							);
+			}
+			}
+			RE_StretchPic ( x + Round(pLetter->horizOffset * fThisScale) + (jello?irand(-1,1):0), // float x
+							(uiLetter > 255) ? y - iAsianYAdjust : y + (jello?irand(-1,1):0),	// float y
+							curfont->mbRoundCalcs ? Round(pLetter->width * fThisScale) : pLetter->width * fThisScale,	// float w
+							curfont->mbRoundCalcs ? Round(pLetter->height * fThisScale) : pLetter->height * fThisScale, // float h
+							pLetter->s,						// float s1
+							pLetter->t,						// float t1
+							pLetter->s2,					// float s2
+							pLetter->t2,					// float t2
+							//lastcolour.c, 
+							hShader							// qhandle_t hShader
+							);
+		if (strike)
+				{
+					RE_SetColor( g_color_table[7]);
+					RE_StretchPic(x + Round(pLetter->horizOffset * fThisScale), y + (curfont->mbRoundCalcs ? Round(pLetter->height * fThisScale) : pLetter->height * fThisScale)/2, curfont->mbRoundCalcs ? Round(pLetter->height * fThisScale) : pLetter->height * fThisScale, 1, 0, 0, 0, 0, whiteshad);
+					RE_SetColor(g_color_table[mmcolor]);
+				}
+		if (underline)
+				{
+					RE_SetColor( g_color_table[7]);
+					RE_StretchPic(x + Round(pLetter->horizOffset * fThisScale), y + (curfont->mbRoundCalcs ? Round(pLetter->height * fThisScale) : pLetter->height * fThisScale), curfont->mbRoundCalcs ? Round(pLetter->height * fThisScale) : pLetter->height * fThisScale, 1, 0, 0, 0, 0, whiteshad);
+					RE_SetColor(g_color_table[mmcolor]);
+				}
 
 			x += Round(pLetter->horizAdvance * fThisScale);
 			break;
 		}		
 
-		if (qbThisCharCountsAsLetter && iCharLimit != -1)
+		/*if (qbThisCharCountsAsLetter && iCharLimit != -1)
 		{
 			if (!--iCharLimit)
 				break;
-		}
+		}*/
 	}
 	//let it remember the old color //RE_SetColor(NULL);;
 }

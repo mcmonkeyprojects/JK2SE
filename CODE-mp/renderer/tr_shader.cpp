@@ -2669,7 +2669,10 @@ static shader_t *GeneratePermanentShader( void ) {
 	int			size, hash;
 
 	if ( tr.numShaders == MAX_SHADERS ) {
-		ri.Printf( PRINT_WARNING, "WARNING: GeneratePermanentShader - MAX_SHADERS hit\n");
+		if (r_printShaders->integer == 1)
+		{
+		 ri.Printf( PRINT_WARNING, "WARNING: GeneratePermanentShader - MAX_SHADERS hit\n");
+		}
 		return tr.defaultShader;
 	}
 
@@ -3374,6 +3377,9 @@ shader_t *R_FindShader( const char *name, const int *lightmapIndex, const byte *
 		}
 
 		if ( !ParseShader( &shaderText ) ) {
+		if ( r_printShaders->integer ) {
+			ri.Printf( PRINT_ALL, "*SHADER* %s Errored - invalid!\n", name);
+		}
 			// had errors, so use default shader
 			shader.defaultShader = qtrue;
 		}
@@ -3606,7 +3612,7 @@ qhandle_t RE_RegisterShader( const char *name ) {
 		return 0;
 	}
 
-	sh = R_FindShader( name, lightmaps2d, stylesDefault, qtrue );
+	sh = R_FindShader( name, lightmaps2d, stylesDefault, qfalse );
 
 	// we want to return 0 if the shader failed to
 	// load for some reason, but R_FindShader should
@@ -3748,7 +3754,7 @@ Finds and loads all .shader files, combining them into
 a single large text block that can be scanned for shader names
 =====================
 */
-#define	MAX_SHADER_FILES	4096
+#define	MAX_SHADER_FILES	8192
 static void ScanAndLoadShaderFiles( const char *path )
 {
 	char **shaderFiles;

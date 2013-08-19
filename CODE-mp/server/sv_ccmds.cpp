@@ -671,6 +671,7 @@ static void SV_Status_f( void )
 	const char		*s;
 	int				ping;
 	char			state[32];
+	char			fixname[32];
 	qboolean		avoidTruncation = qfalse;
 
 	// make sure server is running
@@ -690,10 +691,26 @@ static void SV_Status_f( void )
 
 	Com_Printf ("map: %s\n", sv_mapname->string );
 
-	Com_Printf ("num score ping name            lastmsg address               qport rate\n");
-	Com_Printf ("--- ----- ---- --------------- ------- --------------------- ----- -----\n");
+	Com_Printf ("num score ping name                lastmsg address               qport rate \n");
+	Com_Printf ("--- ----- ---- ------------------- ------- --------------------- ----- -----\n");
 	for (i=0,cl=svs.clients ; i < sv_maxclients->integer ; i++,cl++)
 	{
+		int f;
+		int x = 0;
+		int flen = strlen(cl->name);
+		memset(fixname, 0, sizeof(fixname));
+		for (f = 0;f < flen && f < 31;f++, x++)
+		{
+//#define Q_IsColorString(p)	( p && *(p) == Q_COLOR_ESCAPE && *((p)+1) && *((p)+1) != Q_COLOR_ESCAPE && ((*((p)+1) <= 'B' && *((p)+1) >= '0')||(*((p)+1) == 'b')||(*((p)+1) == 'r')||(*((p)+1) == 'd')||(*((p)+1) == 's')||(*((p)+1) == 'k')||(*((p)+1) == 'j')||(*((p)+1) == 'u')) )
+
+
+			if ( (cl->name[f] == '^') && (((cl->name[f + 1] >= '0') && (cl->name[f + 1] <= 'B')) || (cl->name[f + 1] == 'b') || (cl->name[f + 1] == 'r') || (cl->name[f + 1] == 'd') || (cl->name[f + 1] == 's') || (cl->name[f + 1] == 'k') || (cl->name[f + 1] == 'j') || (cl->name[f + 1] == 'u')) )
+			{
+				f++;
+				f++;
+			}
+			fixname[x] = cl->name[f];
+		}
 		if (!cl->state)
 		{
 			continue;
@@ -718,11 +735,11 @@ static void SV_Status_f( void )
 
 		if (!avoidTruncation)
 		{
-			Com_Printf ("%3i %5i %s %-15.15s %7i %21s %5i %5i\n", 
+			Com_Printf ("%3i %5i %s %19s %7i %21s %5i %5i\n", 
 				i, 
 				ps->persistant[PERS_SCORE],
 				state,
-				cl->name,
+				fixname,
 				svs.time - cl->lastPacketTime,
 				s,
 				cl->netchan.qport,
@@ -735,7 +752,7 @@ static void SV_Status_f( void )
 				i, 
 				ps->persistant[PERS_SCORE],
 				state,
-				cl->name,
+				fixname,
 				svs.time - cl->lastPacketTime,
 				s,
 				cl->netchan.qport,

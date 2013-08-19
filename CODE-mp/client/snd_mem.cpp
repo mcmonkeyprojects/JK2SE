@@ -316,7 +316,7 @@ static qboolean S_LoadSound_FileLoadAndNameAdjuster(char *psFilename, byte **pDa
 				// yep, so fallback to re-try the english...
 				//
 #ifndef FINAL_BUILD
-				Com_Printf(S_COLOR_YELLOW "Foreign file missing: \"%s\"! (using English...)\n",psFilename);
+				//Com_Printf(S_COLOR_YELLOW "Foreign file missing: \"%s\"! (using English...)\n",psFilename);
 #endif
 
 				strncpy(psVoice,"chars",5);

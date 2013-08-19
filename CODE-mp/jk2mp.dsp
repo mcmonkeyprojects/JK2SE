@@ -45,8 +45,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /G6 /W4 /GX /O2 /Ob2 /D "WIN32" /D "NDebug" /D "_WINDOWS" /D "__USEA3D" /D "__A3D_GEOM" /YX /FD /c
-# ADD CPP /nologo /G6 /W4 /GX /Zi /O2 /Ob0 /D "_WIN32" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_JK2" /YX /FD /c
-# SUBTRACT CPP /Fr
+# ADD CPP /nologo /G6 /W4 /GX /Zi /O2 /D "_WIN32" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_JK2" /YX /FD /c
 # ADD BASE MTL /nologo /D "NDebug" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDebug" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "NDebug"
@@ -57,7 +56,7 @@ BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 advapi32.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib ole32.lib /nologo /stack:0x800000 /subsystem:windows /map /debug /machine:I386
 # SUBTRACT BASE LINK32 /incremental:yes /nodefaultlib
-# ADD LINK32 ALut.lib OpenAL32.lib advapi32.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib ole32.lib /nologo /stack:0x800000 /subsystem:windows /map:"Release/jk2mp.map" /debug /machine:I386
+# ADD LINK32 ALut.lib OpenAL32.lib advapi32.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib ole32.lib BugTrap.lib /nologo /stack:0x800000 /subsystem:windows /map:"Release/jk2mp.map" /debug /machine:I386
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "jk2mp - Win32 Debug JK2"
@@ -1580,6 +1579,26 @@ SOURCE=.\Debug\SHW32.DLL
 
 !ENDIF 
 
+# End Source File
+# End Group
+# Begin Group "BUGTRAP"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\bt\BTAtlWindow.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\bt\BTMfcWindow.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\bt\BTTrace.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\bt\BugTrap.h
 # End Source File
 # End Group
 # End Target

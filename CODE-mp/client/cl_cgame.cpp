@@ -1211,6 +1211,7 @@ void CL_InitCGame( void ) {
 
 	// clear anything that got printed
 	Con_ClearNotify ();
+	CL_checkupdate();
 #ifdef _DONETPROFILE_
 	ClReadProf().Reset();
 #endif
@@ -1357,6 +1358,7 @@ void CL_FirstSnapshot( void ) {
 	}
 	
 	Sys_BeginProfiling();
+	CL_checkupdate();
 }
 
 /*

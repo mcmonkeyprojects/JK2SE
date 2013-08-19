@@ -495,6 +495,23 @@ void SV_ConnectionlessPacket( netadr_t from, msg_t *msg ) {
 
 	c = Cmd_Argv(0);
 	Com_DPrintf ("SV packet %s : %s\n", NET_AdrToString(from), c);
+	if (Cvar_VariableIntegerValue( "mc_monpackets" ) == 1)
+	{
+		Com_DPrintf( "SVPACKDATA: %s \n", s);
+	}
+	
+	if (strlen(s) > 512 && Q_stricmp(c, "connect"))
+	{
+		NET_OutOfBandPrint( NS_SERVER, from, "disconnect" );
+		Com_DPrintf("Blocked bad packet.\n");
+		return;
+	}
+	if (strlen(s) > 1024)
+	{
+		NET_OutOfBandPrint( NS_SERVER, from, "disconnect" );
+		Com_DPrintf("Blocked bad packet.\n");
+		return;
+	}
 
 	if (!Q_stricmp(c, "getstatus")) {
 		SVC_Status( from  );

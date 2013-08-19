@@ -305,7 +305,7 @@ typedef struct {
 typedef struct {
 	qboolean	initialized;
 
-	short	text[CON_TEXTSIZE];
+	int	text[CON_TEXTSIZE];
 	int		current;		// line where next message will be printed
 	int		x;				// offset in current line for next print
 	int		display;		// bottom of console displays this line
@@ -406,6 +406,7 @@ int CL_GetPingQueueCount( void );
 
 void CL_ShutdownRef( void );
 void CL_InitRef( void );
+extern bool update;
 
 #ifdef USE_CD_KEY
 

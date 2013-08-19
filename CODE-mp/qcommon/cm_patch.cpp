@@ -1137,16 +1137,19 @@ struct patchCollide_s	*CM_GeneratePatchCollide( int width, int height, vec3_t *p
 	int				i, j;
 
 	if ( width <= 2 || height <= 2 || !points ) {
-		Com_Error( ERR_DROP, "CM_GeneratePatchFacets: bad parameters: (%i, %i, %p)",
-			width, height, points );
+		/*Com_Error( ERR_DROP, "CM_GeneratePatchFacets: bad parameters: (%i, %i, %p)",
+			width, height, points );*/
+		return NULL;
 	}
 
 	if ( !(width & 1) || !(height & 1) ) {
-		Com_Error( ERR_DROP, "CM_GeneratePatchFacets: even sizes are invalid for quadratic meshes" );
+		//Com_Error( ERR_DROP, "CM_GeneratePatchFacets: even sizes are invalid for quadratic meshes" );
+		return NULL;
 	}
 
 	if ( width > MAX_GRID_SIZE || height > MAX_GRID_SIZE ) {
-		Com_Error( ERR_DROP, "CM_GeneratePatchFacets: source is > MAX_GRID_SIZE" );
+		//Com_Error( ERR_DROP, "CM_GeneratePatchFacets: source is > MAX_GRID_SIZE" );
+		return NULL;
 	}
 
 	// build a grid

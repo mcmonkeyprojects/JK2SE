@@ -4,6 +4,7 @@
 
 #include "../qcommon/cm_public.h"
 #include "../game/q_shared.h"
+#include "../qcommon/game_version.h"
 
 //#define	PRE_RELEASE_DEMO
 
@@ -143,12 +144,15 @@ qboolean	NET_GetLoopPacket (netsrc_t sock, netadr_t *net_from, msg_t *net_messag
 void		NET_Sleep(int msec);
 
 
-#define	MAX_MSGLEN				16384		// max length of a message, which may
+#define	MAX_MSGLEN				(16384)		// max length of a message, which may
 											// be fragmented into multiple packets
 
 #define MAX_DOWNLOAD_WINDOW			8		// max of eight download frames
-#define MAX_DOWNLOAD_BLKSIZE		2048	// 2048 byte block chunks
+#define MAX_DOWNLOAD_BLKSIZE		(2048)	// 2048 byte block chunks
+#define MAX_DOWNLOAD_SVBLKSIZE		(/*strstr(Info_ValueForKey(cl->userinfo,"clientexemodi"), "SE")?(8192 * 20):*/2048)	// 2048 byte block chunks
  
+int gl_getwidth( void );
+int gl_getheight( void );
 
 /*
 Netchan handles packet fragmentation and out of order / duplicate suppression
@@ -203,14 +207,15 @@ PROTOCOL
 #define MASTER_SERVER_NAME		"masterjk2.ravensoft.com"
 
 #ifdef USE_CD_KEY
-#define	AUTHORIZE_SERVER_NAME	"authorizejk2.ravensoft.com"
+#undef USE_CD_KEY
+//#define	AUTHORIZE_SERVER_NAME	"authorizejk2.ravensoft.com"
 #endif
 
 #define	PORT_MASTER			28060
 #define	PORT_UPDATE			28061
 #define	PORT_AUTHORIZE		28062
 #define	PORT_SERVER			28070	//...+9 more for multiple servers
-#define	NUM_SERVER_PORTS	4		// broadcast scan this many ports after
+#define	NUM_SERVER_PORTS	9		// broadcast scan this many ports after
 									// PORT_SERVER so a single machine can
 									// run multiple servers
 

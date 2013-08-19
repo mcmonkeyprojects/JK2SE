@@ -3,6 +3,6 @@
 
 // Current version of the multi player game
 
-#define	Q3_VERSION		"JK2MP: v1.04"
+#define	Q3_VERSION		"JK2SE: v1.36"
 
 //end

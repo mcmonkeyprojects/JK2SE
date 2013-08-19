@@ -314,7 +314,7 @@ void Sys_SendPacket( int length, const void *data, netadr_t to ) {
 		net_socket = ipx_socket;
 	}
 	else {
-		Com_Error( ERR_FATAL, "Sys_SendPacket: bad address type" );
+		//Com_Error( ERR_FATAL, "Sys_SendPacket: bad address type" );
 		return;
 	}
 
@@ -729,6 +729,7 @@ void NET_GetLocalAddress( void ) {
 	while( ( p = hostInfo->h_aliases[n++] ) != NULL ) {
 		Com_Printf( "Alias: %s\n", p );
 	}
+	//CL_checkupdate();
 
 	if ( hostInfo->h_addrtype != AF_INET ) {
 		return;

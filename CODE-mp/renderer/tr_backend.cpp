@@ -434,10 +434,10 @@ void RB_BeginDrawingView (void) {
 		glState.finishCalled = qtrue;
 	}
 
-	if (!com_developer->integer && r_shadows->integer == 2)
+	/*if (!com_developer->integer && r_shadows->integer == 2)
 	{
 		Cvar_Set("cg_shadows", "1");
-	}
+	}*/
 
 	// we will need to change the projection matrix before drawing
 	// 2D images again
@@ -1069,7 +1069,7 @@ const void	*RB_DrawBuffer( const void *data ) {
 		qglClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 	}
 	else if ( r_clear->integer ) {
-		qglClearColor( 1, 0, 0.5, 1 );
+		qglClearColor( 0.5, 0, 0.5, 1 );
 		qglClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 	}
 

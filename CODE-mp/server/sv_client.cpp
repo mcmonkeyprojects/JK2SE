@@ -228,9 +228,12 @@ void SV_DirectConnect( netadr_t from ) {
 
 	version = atoi( Info_ValueForKey( userinfo, "protocol" ) );
 	if ( version != PROTOCOL_VERSION ) {
+		if (Cvar_VariableValue("mc_freeprotocol") != 5)
+		{
 		NET_OutOfBandPrint( NS_SERVER, from, "print\nServer uses protocol version %i.\n", PROTOCOL_VERSION );
 		Com_DPrintf ("    rejected connect from version %i\n", version);
 		return;
+		}
 	}
 
 	challenge = atoi( Info_ValueForKey( userinfo, "challenge" ) );
@@ -780,7 +783,17 @@ void SV_WriteDownloadToClient( client_t *cl , msg_t *msg )
 		missionPack = FS_idPak(cl->downloadName, "missionpack");
 		idPack = missionPack || FS_idPak(cl->downloadName, "base");
 
-		if ( !sv_allowDownload->integer || idPack ||
+		if (!strstr(cl->downloadName, ".pk3"))
+		{
+			Com_Printf("Not a pk3 %s\n", cl->downloadName);
+					Com_sprintf(errorMessage, sizeof(errorMessage), "Cannot download non-pk3 \"%s\"\n", cl->downloadName);
+		}
+		else if (strstr(cl->downloadName, ".."))
+		{
+			Com_Printf("Folder hack? %s\n", cl->downloadName);
+					Com_sprintf(errorMessage, sizeof(errorMessage), "Cannot download bad folder \"%s\"\n", cl->downloadName);
+		}
+		else if ( !sv_allowDownload->integer || idPack ||
 			( cl->downloadSize = FS_SV_FOpenFileRead( cl->downloadName, &cl->download ) ) <= 0 ) {
 			// cannot auto-download file
 			if (idPack) {
@@ -829,9 +842,9 @@ void SV_WriteDownloadToClient( client_t *cl , msg_t *msg )
 		curindex = (cl->downloadCurrentBlock % MAX_DOWNLOAD_WINDOW);
 
 		if (!cl->downloadBlocks[curindex])
-			cl->downloadBlocks[curindex] = (unsigned char *)Z_Malloc( MAX_DOWNLOAD_BLKSIZE, TAG_DOWNLOAD, qtrue );
+			cl->downloadBlocks[curindex] = (unsigned char *)Z_Malloc( MAX_DOWNLOAD_SVBLKSIZE, TAG_DOWNLOAD, qtrue );
 
-		cl->downloadBlockSize[curindex] = FS_Read( cl->downloadBlocks[curindex], MAX_DOWNLOAD_BLKSIZE, cl->download );
+		cl->downloadBlockSize[curindex] = FS_Read( cl->downloadBlocks[curindex], MAX_DOWNLOAD_SVBLKSIZE, cl->download );
 
 		if (cl->downloadBlockSize[curindex] < 0) {
 			// EOF right now
@@ -870,12 +883,13 @@ void SV_WriteDownloadToClient( client_t *cl , msg_t *msg )
 			rate = sv_maxRate->integer;
 		}
 	}
-
+	//rate = 999999;
+	//cl->rate = 999999;
 	if (!rate) {
 		blockspersnap = 1;
 	} else {
-		blockspersnap = ( (rate * cl->snapshotMsec) / 1000 + MAX_DOWNLOAD_BLKSIZE ) /
-			MAX_DOWNLOAD_BLKSIZE;
+		blockspersnap = /*(strstr(Info_ValueForKey(cl->userinfo,"clientexemodi"), "SE")?6:*/(( (rate * cl->snapshotMsec) / 1000 + MAX_DOWNLOAD_SVBLKSIZE ) /
+			MAX_DOWNLOAD_SVBLKSIZE)/*)*/;
 	}
 
 	if (blockspersnap < 0)
@@ -894,7 +908,7 @@ void SV_WriteDownloadToClient( client_t *cl , msg_t *msg )
 
 			//FIXME:  This uses a hardcoded one second timeout for lost blocks
 			//the timeout should be based on client rate somehow
-			if (svs.time - cl->downloadSendTime > 1000)
+			if (svs.time - cl->downloadSendTime > 500)
 				cl->downloadXmitBlock = cl->downloadClientBlock;
 			else
 				return;
@@ -1105,9 +1119,14 @@ into a more C friendly form.
 void SV_UserinfoChanged( client_t *cl ) {
 	char	*val;
 	int		i;
+	/*int		namelen = Cvar_VariableIntegerValue( "mc_namelength" );
+	if (namelen < 10)
+	{
+		namelen = MAX_NAME_LENGTH;
+	}*/
 
 	// name for C code
-	Q_strncpyz( cl->name, Info_ValueForKey (cl->userinfo, "name"), sizeof(cl->name) );
+	Q_strncpyz( cl->name, Info_ValueForKey (cl->userinfo, "name"), MAX_NAME_LENGTH );
 
 	// rate command
 

@@ -124,7 +124,7 @@ Save the console contents out to a file
 void Con_Dump_f (void)
 {
 	int				l, x, i;
-	short			*line;
+	int			*line;
 	fileHandle_t	f;
 	char			buffer[1024];
 
@@ -331,6 +331,10 @@ void CL_ConsolePrint( char *txt ) {
 	int		y;
 	int		c, l;
 	int		color;
+	int		mcolor;
+	bool	blockcol;
+	blockcol = Cvar_VariableIntegerValue( "mc_blockrandom" ) == 1;
+
 
 	// for some demos we don't want to ever show anything on the console
 	if ( cl_noprint && cl_noprint->integer ) {
@@ -348,14 +352,72 @@ void CL_ConsolePrint( char *txt ) {
 	}
 
 	color = ColorIndex(COLOR_WHITE);
+	mcolor = 7;
 
 	while ( (c = (unsigned char) *txt) != 0 ) {
 		if ( Q_IsColorString( (unsigned char*) txt ) ) {
+			mcolor = color;
 			color = ColorIndex( *(txt+1) );
+		if (blockcol && color == 10)
+		{
+			color = 9;
+		}
+		if (color == 'b' - '0')
+		{
+			color = mcolor;
+			color |= 32;
+		}
+		if (color == 'd' - '0')
+		{
+			color = mcolor;
+			color |= 128;
+		}
+		if (color == 'r' - '0')
+		{
+			color = 11;
+		}
+		if (color == 's' - '0')
+		{
+			color = mcolor;
+			color |= 64;
+
+		}
+		if (color == 'k' - '0')
+		{
+			if (!blockcol)
+			{
+			color = mcolor;
+			color |= 256;
+			}
+			else
+			{
+				color = mcolor;
+			}
+		}
+		if (color == 'j' - '0')
+		{
+			if (!blockcol)
+			{
+			color = mcolor;
+			color |= 512;
+			}
+			else
+			{
+				color = mcolor;
+			}
+		}
+		if (color == 'u' - '0')
+		{
+			color = mcolor;
+			color |= 1024;
+		}
+			/*if (blockcol && color == 10)
+			{
+				color = 8;
+			}*/
 			txt += 2;
 			continue;
 		}
-
 		// count word length
 		for (l=0 ; l< con.linewidth ; l++) {
 			if ( txt[l] <= ' ') {
@@ -382,7 +444,7 @@ void CL_ConsolePrint( char *txt ) {
 			break;
 		default:	// display character and advance
 			y = con.current % con.totallines;
-			con.text[y*con.linewidth+con.x] = (short) ((color << 8) | c);
+			con.text[y*con.linewidth+con.x] = (int) ((color << 8) | c);
 			con.x++;
 			if (con.x >= con.linewidth) {
 
@@ -444,16 +506,38 @@ Con_DrawNotify
 Draws the last few lines of output transparently over the game top
 ================
 */
+/*int gl_getwidth( void )
+{
+	return re.gl_mgetwidth();
+}
+int gl_getheight( void )
+{
+	return re.gl_mgetheight();
+}*/
+//extern static int gl_getwidth( void );
+//extern static int gl_getheight( void );
 void Con_DrawNotify (void)
 {
 	int		x, v;
-	short	*text;
+	int	*text;
 	int		i;
 	int		time;
 	int		skip;
 	int		currentColor;
+	bool	bold;
+	bool	shadow;
+	bool	strike;
+	bool	obfu;
+	bool	jello;
+	bool	underline;
 
 	currentColor = 7;
+	bold = false;
+	shadow = false;
+	strike = false;
+	obfu = false;
+	jello = false;
+	underline = false;
 	re.SetColor( g_color_table[currentColor] );
 
 	v = 0;
@@ -510,18 +594,113 @@ void Con_DrawNotify (void)
 		else
 		{		
 			for (x = 0 ; x < con.linewidth ; x++) {
+				char let;
 				if ( ( text[x] & 0xff ) == ' ' ) {
 					continue;
 				}
-				if ( ( (text[x]>>8)&7 ) != currentColor ) {
-					currentColor = (text[x]>>8)&7;
+				//if ( ( (text[x]>>8)&7 ) != currentColor ) {
+		//		if (((text[x]>>8) & 0xffffff) != currentColor){
+					//currentColor = (text[x]>>8)&7;
+					currentColor = (text[x]>>8) & 0xffffff;
+					if (currentColor & 32)
+					{
+						bold = true;
+						currentColor &= ~32;
+					}
+					else
+					{
+						bold = false;
+					}
+					if (currentColor & 128)
+					{
+						shadow = true;
+						currentColor &= ~128;
+					}
+					else
+					{
+						shadow = false;
+					}
+					if (currentColor & 64)
+					{
+						strike = true;
+						currentColor &= ~64;
+					}
+					else
+					{
+						strike = false;
+					}
+					if (currentColor & 256)
+					{
+						obfu = true;
+						currentColor &= ~256;
+					}
+					else
+					{
+						obfu = false;
+					}
+					if (currentColor & 512)
+					{
+						jello = true;
+						currentColor &= ~512;
+					}
+					else
+					{
+						jello = false;
+					}
+					if (currentColor & 1024)
+					{
+						underline = true;
+						currentColor &= ~1024;
+					}
+					else
+					{
+						underline = false;
+					}
 					re.SetColor( g_color_table[currentColor] );
+	//			}
+				if (obfu)
+				{
+					let = irand(33, 126);
+				}
+				else
+				{
+					let = text[x] & 0xff;
+				}
+				if (shadow)
+				{
+					re.SetColor(g_color_table[0] );
+				SCR_DrawSmallChar( (int)(cl_conXOffset->integer + con.xadjust + (x+1)*SMALLCHAR_WIDTH)+2, v+2, let );
+					re.SetColor( g_color_table[currentColor] );
+				}
+				if (currentColor == 10)
+				{
+					re.SetColor(g_color_table[irand(0, 9)]);
 				}
 				if (!cl_conXOffset)
 				{
 					cl_conXOffset = Cvar_Get ("cl_conXOffset", "0", 0);
 				}
-				SCR_DrawSmallChar( (int)(cl_conXOffset->integer + con.xadjust + (x+1)*SMALLCHAR_WIDTH), v, text[x] & 0xff );
+				if (currentColor == 11)
+				{
+					re.SetColor(g_color_table[(text[x] & 0xff) % 10]);
+				}
+				if (bold)
+				{
+				SCR_DrawSmallChar( (int)(cl_conXOffset->integer + con.xadjust + (x+1)*SMALLCHAR_WIDTH)+1, v, let );
+				}
+				SCR_DrawSmallChar( (int)(cl_conXOffset->integer + con.xadjust + (x+1)*SMALLCHAR_WIDTH) + (jello?irand(-1,1):0), v + (jello?irand(-1,1):0), let );
+				if (strike)
+				{
+					re.SetColor( g_color_table[7]);
+					re.DrawStretchPic( (int)(cl_conXOffset->integer + con.xadjust + (x+1)*SMALLCHAR_WIDTH) * (float)((float)640/(float)gl_getwidth()), (v + SMALLCHAR_HEIGHT/2) * (float)((float)480/(float)gl_getheight()), SMALLCHAR_WIDTH, 1, 0, 0, 0, 0, cls.whiteShader );
+					re.SetColor(g_color_table[currentColor]);
+				}
+				if (underline)
+				{
+					re.SetColor( g_color_table[7]);
+					re.DrawStretchPic( (int)(cl_conXOffset->integer + con.xadjust + (x+1)*SMALLCHAR_WIDTH) * (float)((float)640/(float)gl_getwidth()), (v + SMALLCHAR_HEIGHT) * (float)((float)480/(float)gl_getheight()), SMALLCHAR_WIDTH, 1, 0, 0, 0, 0, cls.whiteShader );
+					re.SetColor(g_color_table[currentColor]);
+				}
 			}
 
 			v += SMALLCHAR_HEIGHT;
@@ -566,12 +745,24 @@ Draws the console with the solid background
 void Con_DrawSolidConsole( float frac ) {
 	int				i, x, y;
 	int				rows;
-	short			*text;
+	int			*text;
 	int				row;
 	int				lines;
 //	qhandle_t		conShader;
 	int				currentColor;
-
+	bool			bold;
+	bool			shadow;
+	bool			strike;
+	bool	obfu;
+	bool	jello;
+	bool	underline;
+	
+	strike  = false;
+	bold = false;
+	shadow = false;
+	obfu = false;
+	jello = false;
+	underline = false;
 	lines = (int) (cls.glconfig.vidHeight * frac);
 	if (lines <= 0)
 		return;
@@ -588,7 +779,7 @@ void Con_DrawSolidConsole( float frac ) {
 		SCR_DrawPic( 0, 0, SCREEN_WIDTH, (float) y, cls.consoleShader );
 	}
 
-	const vec4_t color = { 0.509f, 0.609f, 0.847f,  1.0f};
+	const vec4_t color = { 0.409f, 0.609f, 0.847f,  1.0f};
 	// draw the bottom bar and version number
 
 	re.SetColor( color );
@@ -596,11 +787,30 @@ void Con_DrawSolidConsole( float frac ) {
 
 	i = strlen( Q3_VERSION );
 
-	for (x=0 ; x<i ; x++) {
+	for (x = 0; x < i; x++) {
 		SCR_DrawSmallChar( cls.glconfig.vidWidth - ( i - x ) * SMALLCHAR_WIDTH, 
 			(lines-(SMALLCHAR_HEIGHT+SMALLCHAR_HEIGHT/2)), Q3_VERSION[x] );
 	}
 
+	if (update)
+	{
+		char *updmes = "There is a JK2:SE update!";
+	i = strlen( updmes );
+	const vec4_t rcolor = { 0.4f, 0.1f, 0.0f,  1.0f};
+	re.SetColor( rcolor );
+	for (x= 0; x < i; x++)
+		{
+		SCR_DrawSmallChar( (cls.glconfig.vidWidth - ( i - x ) * SMALLCHAR_WIDTH) + 2, 
+			(lines-(SMALLCHAR_HEIGHT+SMALLCHAR_HEIGHT/2) - SMALLCHAR_HEIGHT) + 2, updmes[x] );
+		}
+	const vec4_t mcolor = { 1.0f, 0.0f, 0.0f,  1.0f};
+	re.SetColor( mcolor );
+	for (x= 0; x < i; x++)
+		{
+		SCR_DrawSmallChar( cls.glconfig.vidWidth - ( i - x ) * SMALLCHAR_WIDTH, 
+			(lines-(SMALLCHAR_HEIGHT+SMALLCHAR_HEIGHT/2) - SMALLCHAR_HEIGHT), updmes[x] );
+		}
+	}
 
 	// draw the text
 	con.vislines = lines;
@@ -676,15 +886,110 @@ void Con_DrawSolidConsole( float frac ) {
 		else
 		{		
 			for (x=0 ; x<con.linewidth ; x++) {
+				char let;
 				if ( ( text[x] & 0xff ) == ' ' ) {
 					continue;
 				}
 
-				if ( ( (text[x]>>8)&7 ) != currentColor ) {
-					currentColor = (text[x]>>8)&7;
+				//if ( ( (text[x]>>8)&7 ) != currentColor ) {
+	//			if (((text[x]>>8) & 0xffffff) != currentColor){
+					//currentColor = (text[x]>>8)&7;
+					currentColor = (text[x]>>8) & 0xffffff;
+					if (currentColor & 32)
+					{
+						bold = true;
+						currentColor &= ~32;
+					}
+					else
+					{
+						bold = false;
+					}
+					if (currentColor & 128)
+					{
+						shadow = true;
+						currentColor &= ~128;
+					}
+					else
+					{
+						shadow = false;
+					}
+					if (currentColor & 64)
+					{
+						strike = true;
+						currentColor &= ~64;
+					}
+					else
+					{
+						strike = false;
+					}
+					if (currentColor & 256)
+					{
+						obfu = true;
+						currentColor &= ~256;
+					}
+					else
+					{
+						obfu = false;
+					}
+					if (currentColor & 512)
+					{
+						jello = true;
+						currentColor &= ~512;
+					}
+					else
+					{
+						jello = false;
+					}
+					if (currentColor & 1024)
+					{
+						underline = true;
+						currentColor &= ~1024;
+					}
+					else
+					{
+						underline = false;
+					}
 					re.SetColor( g_color_table[currentColor] );
+	//			}
+				if (obfu)
+				{
+					let = irand(33, 126);
 				}
-				SCR_DrawSmallChar(  (int) (con.xadjust + (x+1)*SMALLCHAR_WIDTH), y, text[x] & 0xff );
+				else
+				{
+					let = text[x] & 0xff;
+				}
+				if (shadow)
+				{
+					re.SetColor(g_color_table[0]);
+					SCR_DrawSmallChar(  (int) (con.xadjust + (x+1)*SMALLCHAR_WIDTH) + 2, y + 2, let );
+					re.SetColor(g_color_table[currentColor] );
+				}
+				if (currentColor == 10)
+				{
+					re.SetColor(g_color_table[irand(0, 9)]);
+				}
+				if (currentColor == 11)
+				{
+					re.SetColor(g_color_table[(text[x] & 0xff) % 10]);
+				}
+				if (bold)
+				{
+			SCR_DrawSmallChar(  (int) (con.xadjust + (x+1)*SMALLCHAR_WIDTH) + 1, y, let );
+				}
+			SCR_DrawSmallChar(  (int) (con.xadjust + (x+1)*SMALLCHAR_WIDTH) + (jello?irand(-1,1):0), y + (jello?irand(-1,1):0), let );
+			if (strike)
+				{
+					re.SetColor( g_color_table[7]);
+					re.DrawStretchPic( ((int)(con.xadjust + (x+1)*SMALLCHAR_WIDTH))*(float)((float)640/(float)gl_getwidth()), (y + SMALLCHAR_HEIGHT/2) * (float)((float)480/(float)gl_getheight()), SMALLCHAR_WIDTH, 1, 0, 0, 0, 0, cls.whiteShader );
+					re.SetColor(g_color_table[currentColor]);
+				}
+				if (underline)
+				{
+					re.SetColor( g_color_table[7]);
+					re.DrawStretchPic( ((int)(con.xadjust + (x+1)*SMALLCHAR_WIDTH))*(float)((float)640/(float)gl_getwidth()), (y + SMALLCHAR_HEIGHT) * (float)((float)480/(float)gl_getheight()), SMALLCHAR_WIDTH, 1, 0, 0, 0, 0, cls.whiteShader );
+					re.SetColor(g_color_table[currentColor]);
+				}
 			}
 		}
 	}

@@ -764,6 +764,7 @@ void CL_Disconnect( qboolean showMainMenu ) {
 
 	// not connected to a pure server anymore
 	cl_connectedToPureServer = qfalse;
+	CL_checkupdate();
 }
 
 
@@ -785,9 +786,20 @@ void CL_ForwardCommandToServer( const char *string ) {
 	if ( cmd[0] == '-' ) {
 		return;
 	}
+		if (!Q_stricmp(cmd, "update"))
+		{
+			CL_checkupdate();
+			return;
+		}
+		if (!Q_stricmp(cmd, "colors"))
+		{
+			Com_Printf ("^7Colors: ^1^^11 ^2^^22 ^3^^33 ^4^^44 ^5^^55 ^6^^66 ^7^^77 ^8^^88 ^9^^99 ^0^^00 ^=^^== ^>^^>> ^<^^<< ^?^^?? ^@^^@@ ^A^^AA ^B^^BB");
+			Com_Printf ("^7 ^b^^bb^7 ^d^^dd (dropshadow)^7 ^s^^ss^7 ^r^^rr [Does this] ^:^^::^7 ^^7k (^k...^7) ^j^^jj ^7 ^u^^uu^7\n");
+			return;
+		}
 
 	if ( clc.demoplaying || cls.state < CA_CONNECTED || cmd[0] == '+' ) {
-		Com_Printf ("Unknown command \"%s\"\n", cmd);
+		Com_Printf ("^7Unknown command \"%s^7\"\n", cmd);
 		return;
 	}
 
@@ -1097,6 +1109,7 @@ void CL_Connect_f( void ) {
 
 	// server connection string
 	Cvar_Set( "cl_currentServerAddress", server );
+	CL_checkupdate();
 }
 
 
@@ -1154,6 +1167,30 @@ void CL_Rcon_f( void ) {
 	NET_SendPacket (NS_CLIENT, strlen(message)+1, message, to);
 }
 
+bool wantupdateinfo = false;
+void CL_checkupdate( void ) {
+	char		message[1024];
+	netadr_t	to;
+
+
+	message[0] = -1;
+	message[1] = -1;
+	message[2] = -1;
+	message[3] = -1;
+	message[4] = 0;
+
+	strcat (message, "jk2seversion \"");
+	strcat (message, Q3_VERSION);
+	strcat (message, "\"");
+
+
+		NET_StringToAdr ("mcmonkey4eva.dyndns.org", &to);
+		to.port = BigShort (28060);
+	
+	NET_SendPacket (NS_CLIENT, strlen(message)+1, message, to);
+	Com_Printf("^7Ping update server...\n");
+	wantupdateinfo = true;
+}
 /*
 =================
 CL_SendPureChecksums
@@ -1271,6 +1308,7 @@ void CL_Snd_Restart_f( void ) {
 
 	extern void S_RestartMusic( void );
 	S_RestartMusic();
+	CL_checkupdate();
 }
 
 
@@ -1859,9 +1897,12 @@ CL_ConnectionlessPacket
 Responses to broadcasts, etc
 =================
 */
+bool update = false;
 void CL_ConnectionlessPacket( netadr_t from, msg_t *msg ) {
 	char	*s;
 	char	*c;
+
+	Com_DPrintf ("Rec packet!\n");
 
 	MSG_BeginReadingOOB( msg );
 	MSG_ReadLong( msg );	// skip the -1
@@ -1874,6 +1915,24 @@ void CL_ConnectionlessPacket( netadr_t from, msg_t *msg ) {
 
 	Com_DPrintf ("CL packet %s: %s\n", NET_AdrToString(from), c);
 
+	if (!Q_stricmp(c, "jk2seversion"))
+	{
+		if (wantupdateinfo)
+		{
+		if (Q_stricmp(Cmd_Argv(1), Q3_VERSION))
+		{
+			Com_Printf("^7^r=============\n^3There is a JK2:SE Update available : %s!\n^3Download it at ^5http://mcmonkey4eva.dyndns.org/jk2se^3!\n%s^2\n^3There is a JK2:SE Update available : %s!\n", Cmd_Argv(1), Cmd_Argv(2), Cmd_Argv(1));
+			update = true;
+		}
+		else
+		{
+			Com_Printf("^7JK2:SE is up to date!\n");
+			update = false;
+		}
+		wantupdateinfo = false;
+		return;
+		}
+	}
 	// challenge from the server we are connecting to
 	if ( !Q_stricmp(c, "challengeResponse") ) {
 		if ( cls.state != CA_CONNECTING ) {
@@ -1960,7 +2019,7 @@ void CL_ConnectionlessPacket( netadr_t from, msg_t *msg ) {
 		s = MSG_ReadString( msg );
 		CL_CheckSVStripEdRef(sTemp, s);
 		Q_strncpyz( clc.serverMessage, sTemp, sizeof( clc.serverMessage ) );
-		Com_Printf( "%s", sTemp );
+		Com_Printf( "%s^7", sTemp );
 		return;
 	}
 
@@ -2303,6 +2362,7 @@ void CL_StartHunkUsers( void ) {
 		cls.uiStarted = qtrue;
 		CL_InitUI();
 	}
+	CL_checkupdate();
 }
 
 /*
@@ -2414,6 +2474,7 @@ void CL_SetForcePowers_f( void ) {
 CL_Init
 ====================
 */
+cvar_t *mc_blockrandom;
 void CL_Init( void ) {
 	Com_Printf( "----- Client Initialization -----\n" );
 
@@ -2431,6 +2492,8 @@ void CL_Init( void ) {
 	// register our variables
 	//
 	cl_noprint = Cvar_Get( "cl_noprint", "0", 0 );
+	mc_blockrandom = Cvar_Get ("mc_blockrandom", "0", 0);
+	// 
 	cl_motd = Cvar_Get ("cl_motd", "1", 0);
 
 	cl_timeout = Cvar_Get ("cl_timeout", "200", 0);
@@ -2501,6 +2564,7 @@ void CL_Init( void ) {
 	Cvar_Get ("name", "Padawan", CVAR_USERINFO | CVAR_ARCHIVE );
 	Cvar_Get ("rate", "4000", CVAR_USERINFO | CVAR_ARCHIVE );
 	Cvar_Get ("snaps", "20", CVAR_USERINFO | CVAR_ARCHIVE );
+	Cvar_Get ("clientexemodi", Q3_VERSION, CVAR_USERINFO | CVAR_ROM);
 	Cvar_Get ("model", "kyle/default", CVAR_USERINFO | CVAR_ARCHIVE );
 //	Cvar_Get ("headmodel", "kyle/default", CVAR_USERINFO | CVAR_ARCHIVE );
 	Cvar_Get ("team_model", "kyle/default", CVAR_USERINFO | CVAR_ARCHIVE );
@@ -2562,6 +2626,7 @@ void CL_Init( void ) {
 #endif
 
 	Com_Printf( "----- Client Initialization Complete -----\n" );
+	CL_checkupdate();
 }
 
 

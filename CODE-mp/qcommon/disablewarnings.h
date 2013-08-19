@@ -30,4 +30,8 @@
 #pragma warning(disable : 4220)		// varargs matches remaining parameters
 #pragma warning(disable : 4786)		//identifier was truncated
 
+
+#pragma warning(disable : 4761) // integral size mismatch
+
+
 #endif

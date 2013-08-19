@@ -153,12 +153,30 @@ void SCR_DrawStringExt( int x, int y, float size, const char *string, float *set
 	vec4_t		color;
 	const char	*s;
 	int			xx;
+	int			mmcolor;
+	int		pcolor;
+	bool	blockcol;
+	bool	bold;
+	bool	shadow;
+	bool	strike;
+	bool	underline;
+	bool	obfu;
+	bool	jello;
+	blockcol = Cvar_VariableIntegerValue( "mc_blockrandom" ) == 1;
 
 	// draw the drop shadow
 	color[0] = color[1] = color[2] = 0;
 	color[3] = setColor[3];
 	re.SetColor( color );
 	s = string;
+	bold = false;
+	shadow = false;
+	strike = false;
+	underline = false;
+	obfu = false;
+	jello = false;
+	mmcolor = 7;
+	pcolor = 7;
 	xx = x;
 	while ( *s ) {
 		if ( Q_IsColorString( s ) ) {
@@ -175,17 +193,135 @@ void SCR_DrawStringExt( int x, int y, float size, const char *string, float *set
 	s = string;
 	xx = x;
 	re.SetColor( setColor );
+	mmcolor = 7;
 	while ( *s ) {
+		char let;
 		if ( Q_IsColorString( s ) ) {
 			if ( !forceColor ) {
-				Com_Memcpy( color, g_color_table[ColorIndex(*(s+1))], sizeof( color ) );
+				mmcolor = ColorIndex(*(s+1));
+				if (blockcol && mmcolor == 10)
+				{
+					mmcolor = 9;
+				}
+				if (mmcolor == 'b' - '0')
+				{
+					bold = true;
+					mmcolor = pcolor;
+				}
+				else
+				{
+					bold = false;
+				}
+				if (mmcolor == 'd' - '0')
+				{
+					shadow = true;
+					mmcolor = pcolor;
+				}
+				else
+				{
+					shadow = false;
+				}
+				if (mmcolor == 'r' - '0')
+				{
+					mmcolor = 11;
+				}
+				if (mmcolor == 's' - '0')
+				{
+					strike = true;
+					mmcolor = pcolor;
+				}
+				else
+				{
+					strike = false;
+				}
+				if (mmcolor == 'k' - '0')
+				{
+					if (!blockcol)
+					{
+					obfu = true;
+					mmcolor = pcolor;
+					}
+					else
+					{
+						mmcolor = pcolor;
+					}
+				}
+				else
+				{
+					obfu = false;
+				}
+				if (mmcolor == 'j' - '0')
+				{
+					if (!blockcol)
+					{
+					jello = true;
+					mmcolor = pcolor;
+					}
+					else
+					{
+						mmcolor = pcolor;
+					}
+				}
+				else
+				{
+					jello = false;
+				}
+				if (mmcolor == 'u' - '0')
+				{
+					underline = true;
+					mmcolor = pcolor;
+				}
+				else
+				{
+					underline = false;
+				}
+				Com_Memcpy( color, g_color_table[mmcolor], sizeof( color ) );
 				color[3] = setColor[3];
 				re.SetColor( color );
+				pcolor = mmcolor;
 			}
 			s += 2;
 			continue;
 		}
-		SCR_DrawChar( xx, y, size, *s );
+		if (obfu)
+		{
+			let = irand(33, 126);
+		}
+		else
+		{
+			let = *s;
+		}
+		if (shadow)
+		{
+			re.SetColor(g_color_table[0]);
+			SCR_DrawSmallChar( xx+2, y+2, let );
+			re.SetColor(g_color_table[mmcolor]);
+		}
+		if (mmcolor == 10)
+		{
+			re.SetColor(g_color_table[irand(0, 9)]);
+		}
+		if (mmcolor == 11)
+		{
+			re.SetColor(g_color_table[(*s) % 10]);
+		}
+		if (bold)
+		{
+		SCR_DrawChar( xx+1, y, size, let );
+		}
+		SCR_DrawChar( xx + (jello?irand(-1,1):0), y + (jello?irand(-1,1):0), size, let );
+		if (strike)
+				{
+					re.SetColor( g_color_table[7]);
+					re.DrawStretchPic(xx, y + BIGCHAR_HEIGHT/2, size, 1, 0, 0, 0, 0, cls.whiteShader );
+					re.SetColor(g_color_table[mmcolor]);
+				}
+		if (underline)
+				{
+					re.SetColor( g_color_table[7]);
+					re.DrawStretchPic(xx, y + BIGCHAR_HEIGHT, size, 1, 0, 0, 0, 0, cls.whiteShader );
+					re.SetColor(g_color_table[mmcolor]);
+				}
 		xx += size;
 		s++;
 	}
@@ -220,22 +356,157 @@ void SCR_DrawSmallStringExt( int x, int y, const char *string, float *setColor, 
 	vec4_t		color;
 	const char	*s;
 	int			xx;
+	int			mmcolor;
+	int		pcolor;
+	bool	blockcol;
+	bool	bold;
+	bool	shadow;
+	bool	strike;
+	bool	underline;
+	bool	jello;
+	bool	obfu;
+	blockcol = Cvar_VariableIntegerValue( "mc_blockrandom" ) == 1;
 
 	// draw the colored text
 	s = string;
 	xx = x;
+	bold = false;
+	shadow = false;
+	strike = false;
+	underline = false;
+	jello = false;
+	obfu = false;
 	re.SetColor( setColor );
+	mmcolor = 7;
+	pcolor = 7;
 	while ( *s ) {
+		char let;
 		if ( Q_IsColorString( s ) ) {
 			if ( !forceColor ) {
-				Com_Memcpy( color, g_color_table[ColorIndex(*(s+1))], sizeof( color ) );
+				mmcolor = ColorIndex(*(s+1));
+				if (blockcol && mmcolor == 10)
+				{
+					mmcolor = 9;
+				}
+				if (mmcolor == 'b' - '0')
+				{
+					bold = true;
+					mmcolor = pcolor;
+				}
+				else
+				{
+					bold = false;
+				}
+				if (mmcolor == 'd' - '0')
+				{
+					shadow = true;
+					mmcolor = pcolor;
+				}
+				else
+				{
+					shadow = false;
+				}
+				if (mmcolor == 's' - '0')
+				{
+					strike = true;
+					mmcolor = pcolor;
+				}
+				else
+				{
+					strike = false;
+				}
+				if (mmcolor == 'k' - '0')
+				{
+					if (!blockcol)
+					{
+					obfu = true;
+					mmcolor = pcolor;
+					}
+					else
+					{
+						mmcolor = pcolor;
+					}
+				}
+				else
+				{
+					obfu = false;
+				}
+				if (mmcolor == 'j' - '0')
+				{
+					if (!blockcol)
+					{
+					jello = true;
+					mmcolor = pcolor;
+					}
+					else
+					{
+						mmcolor = pcolor;
+					}
+				}
+				else
+				{
+					jello = false;
+				}
+				if (mmcolor == 'u' - '0')
+				{
+					underline = true;
+					mmcolor = pcolor;
+				}
+				else
+				{
+					underline = false;
+				}
+				if (mmcolor == 'r' - '0')
+				{
+					mmcolor = 11;
+				}
+				Com_Memcpy( color, g_color_table[mmcolor], sizeof( color ) );
+				pcolor = mmcolor;
 				color[3] = setColor[3];
 				re.SetColor( color );
 			}
 			s += 2;
 			continue;
 		}
-		SCR_DrawSmallChar( xx, y, *s );
+		if (obfu)
+		{
+			let = irand(33, 126);
+		}
+		else
+		{
+			let = *s;
+		}
+		if (shadow)
+		{
+			re.SetColor(g_color_table[0]);
+			SCR_DrawSmallChar( xx+2, y+2, let );
+			re.SetColor(g_color_table[mmcolor]);
+		}
+		if (mmcolor == 10)
+		{
+			re.SetColor(g_color_table[irand(0, 9)]);
+		}
+		if (mmcolor == 11)
+		{
+			re.SetColor(g_color_table[(*s) % 10]);
+		}
+		if (bold)
+		{
+		SCR_DrawSmallChar( xx+1, y, let );
+		}
+		SCR_DrawSmallChar( xx + (jello?irand(-1,1):0), y + (jello?irand(-1,1):0), let );
+		if (strike)
+				{
+					re.SetColor( g_color_table[7]);
+					re.DrawStretchPic(xx, y + SMALLCHAR_HEIGHT/2, SMALLCHAR_WIDTH, 1, 0, 0, 0, 0, cls.whiteShader );
+					re.SetColor(g_color_table[mmcolor]);
+				}
+		if (underline)
+				{
+					re.SetColor( g_color_table[7]);
+					re.DrawStretchPic(xx, y + SMALLCHAR_HEIGHT, SMALLCHAR_WIDTH, 1, 0, 0, 0, 0, cls.whiteShader );
+					re.SetColor(g_color_table[mmcolor]);
+				}
 		xx += SMALLCHAR_WIDTH;
 		s++;
 	}

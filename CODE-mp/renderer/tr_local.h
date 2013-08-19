@@ -29,9 +29,9 @@ long myftol( float f );
 // parallel on a dual cpu machine
 #define	SMP_FRAMES		2
 
-#define	MAX_SHADERS				2048
+#define	MAX_SHADERS				4096
 
-#define MAX_SHADER_STATES 2048
+#define MAX_SHADER_STATES 4096
 #define MAX_STATES_PER_SHADER 32
 #define MAX_STATE_NAME 32
 
@@ -634,10 +634,10 @@ typedef struct drawSurf_s {
 	surfaceType_t		*surface;		// any of surface*_t
 } drawSurf_t;
 
-#define	MAX_FACE_POINTS		64
+#define	MAX_FACE_POINTS		128
 
-#define	MAX_PATCH_SIZE		32			// max dimensions of a patch mesh in map file
-#define	MAX_GRID_SIZE		65			// max dimensions of a grid mesh in memory
+#define	MAX_PATCH_SIZE		128			// max dimensions of a patch mesh in map file
+#define	MAX_GRID_SIZE		129			// max dimensions of a grid mesh in memory
 
 // when cgame directly specifies a polygon, it becomes a srfPoly_t
 // as soon as it is called
@@ -906,12 +906,12 @@ void		R_Modellist_f (void);
 //====================================================
 extern	refimport_t		ri;
 
-#define	MAX_DRAWIMAGES			2048
-#define	MAX_LIGHTMAPS			256
+#define	MAX_DRAWIMAGES			4096
+#define	MAX_LIGHTMAPS			2048
 #define	MAX_SKINS				1024
 
 
-#define	MAX_DRAWSURFS			0x10000
+#define	MAX_DRAWSURFS			0x40000
 #define	DRAWSURF_MASK			(MAX_DRAWSURFS-1)
 
 /*
@@ -1475,7 +1475,7 @@ struct shaderCommands_s
 
 };
 #ifndef DEDICATED
-typedef __declspec(align(16)) shaderCommands_s	shaderCommands_t;
+typedef /*__declspec(align(16))*/ shaderCommands_s	shaderCommands_t;
 extern	shaderCommands_t	tess;
 #endif
 extern	color4ub_t	styleColors[MAX_LIGHT_STYLES];
@@ -1777,8 +1777,8 @@ typedef enum {
 // these are sort of arbitrary limits.
 // the limits apply to the sum of all scenes in a frame --
 // the main view, all the 3D icons, etc
-#define	MAX_POLYS		600
-#define	MAX_POLYVERTS	3000
+#define	MAX_POLYS		4096
+#define	MAX_POLYVERTS	16384
 
 // all of the information needed by the back end must be
 // contained in a backEndData_t.  This entire structure is

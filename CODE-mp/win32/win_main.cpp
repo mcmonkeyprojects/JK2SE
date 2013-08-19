@@ -1561,7 +1561,17 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 		Cvar_Set("cl_trn", "666");
 	}
 #endif
-
+	BT_SetAppName("JK2SE");
+	BT_SetSupportEMail("mcmonkey4eva@hotmail.com");
+	BT_SetFlags(BTF_DETAILEDMODE | BTF_ATTACHREPORT);
+	BT_SetSupportServer("mcmonkey4eva.dyndns.org", 80);
+	BT_InstallSehFilter();
+	INT_PTR g_iLogHandle = -1;
+	g_iLogHandle = BT_OpenLogFile(NULL, BTLF_TEXT);
+	BT_SetLogSizeInEntries(g_iLogHandle, 100);
+	BT_SetLogFlags(g_iLogHandle, BTLF_SHOWTIMESTAMP);
+	BT_SetLogEchoMode(g_iLogHandle, BTLE_STDERR | BTLE_DBGOUT);
+	BT_AddLogFile(BT_GetLogFileName(g_iLogHandle));
     // main game loop
 	while( 1 ) {
 		// if not running as a game client, sleep a bit
@@ -1576,10 +1586,18 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 //		startTime = Sys_Milliseconds();
 
 		// make sure mouse and joystick are only called once a frame
+	//	try
+	//	{
+
 		IN_Frame();
 
 		// run the game
 		Com_Frame();
+	//	}
+	//	catch (int param)
+	//	{
+	//		return param;
+	//	}
 
 //		endTime = Sys_Milliseconds();
 //		totalMsec += endTime - startTime;

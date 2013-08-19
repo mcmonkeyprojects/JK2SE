@@ -31,7 +31,7 @@ static void WIN_DisableAltTab( void )
 
 	if ( !Q_stricmp( Cvar_VariableString( "arch" ), "winnt" ) )
 	{
-		RegisterHotKey( 0, 0, MOD_ALT, VK_TAB );
+		//RegisterHotKey( 0, 0, MOD_ALT, VK_TAB );
 	}
 	else
 	{
@@ -48,7 +48,7 @@ static void WIN_EnableAltTab( void )
 	{
 		if ( !Q_stricmp( Cvar_VariableString( "arch" ), "winnt" ) )
 		{
-			UnregisterHotKey( 0, 0 );
+			//UnregisterHotKey( 0, 0 );
 		}
 		else
 		{

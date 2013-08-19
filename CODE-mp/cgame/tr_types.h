@@ -229,7 +229,7 @@ Ghoul2 Insert End
 
 
 #define	MAX_RENDER_STRINGS			8
-#define	MAX_RENDER_STRING_LENGTH	32
+#define	MAX_RENDER_STRING_LENGTH	64
 
 typedef struct {
 	int			x, y, width, height;
