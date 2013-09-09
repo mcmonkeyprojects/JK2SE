@@ -101,7 +101,7 @@ The following are the primary differences between this file and the original JK2
 BUGS: None known. Please report any to me, mcmonkey - via the methods listed at http://mcmonkey4eva.dyndns.org/contact (or above)
 
 
-COMMENTS: ...
+COMMENTS: Source code available at: https://github.com/mcmonkey4eva/JK2SE
 
 
 **THIS MODIFICATION IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY ACTIVISION, RAVEN, OR LUCASARTS ENTERTAINMENT COMPANY LLC. ELEMENTS TM & LUCASARTS ENTERTAINMENT COMPANY LLC AND/OR ITS LICENSORS.
