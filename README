@@ -1,7 +1,7 @@
 ==========================================================
 Star Wars: Jedi Knight 2: Jedi Outcast (Special Edition!)
 Author: mcmonkey
-WebPage: http://mcmonkey.org/jk2se
+WebPage: http://mcmonkey.org/jk2/jk2se
 email: mcmonkey4eva@hotmail.com
 version: 1.36
 ==========================================================
@@ -10,7 +10,7 @@ DESCRIPTION:
 ]JK2SE is a modification of JK2's main code to just be all around better in various small ways.
 ]Note: in console type "/mc_blockrandom 1" (without quotes) if you have a seizure risk or just dislike the ^: random text
 ]Note: in console type "/colors" for a list of colors or "/update" to check for a JK2:SE update
-]Want something changed or added? Suggest it @ http://mcmonkey4eva.dyndns.org/jk2se
+]Want something changed or added? Suggest it @ http://mcmonkey.org/jk2/jk2se
 
 INSTALL:
 ]Just copy the new 'jk2mp.exe' file and 'base' folder into your JK2/Gamedata folder
@@ -54,7 +54,7 @@ CHANGES:
 - increased some internal rendering limits
 - added ^? chatcolor (Dark bluegreen)
 ] 1.25
-- Added support for any SP map (requires server be running Twifire Serverside - http://mcmonkey4eva.dyndns.org/twifire )
+- Added support for any SP map (requires server be running Twifire Serverside - http://mcmonkey.org/jk2/twifire )
 ] 1.26
 - fixed sound-loop crash
 ] 1.27
